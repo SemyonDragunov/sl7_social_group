@@ -1,0 +1,192 @@
+<?php
+
+/**
+ * @file
+ * SL7 Social Group module.
+ * 
+ * @author Semyon Dragunov <sam.dragunov@gmail.com>
+ * https://github.com/SemyonDragunov
+ */
+
+define('SL7_SOCIAL_PANEL_ADMIN_PATH', SL7_CONTROL_PANEL_ADMIN_PATH . '/social/group');
+
+/**
+ * Implement hook_menu().
+ */
+function sl7_social_group_menu() {
+
+  $items[SL7_SOCIAL_PANEL_ADMIN_PATH] = array(
+    'title' => 'Социальные группы',
+    'description' => 'Настройка виджета групп в социальных сетях.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sl7_social_group_settings_form'),
+    'access arguments' => array('administer sl7_social_group'),
+  );
+
+  $items['ajax/sl7-social-group/%'] = array(
+    'title' => 'AJAX load social group.',
+    'page callback' => 'sl7_social_group_ajax_callback',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  return $items;
+}
+
+/**
+ * Implement hook_permission().
+ */
+function sl7_social_group_permission() {
+  return array(
+    'administer sl7_social_group' => array(
+      'title' => 'Доступ к настройкам блока с группами.',
+    )
+  );
+}
+
+/**
+ * Implement hook_theme().
+ */
+function sl7_social_group_theme() {
+  $items = array(
+    'sl7_social_group__block_groups' => array(),
+  );
+
+  foreach ($items as &$item) {
+    if (!isset($item['file'])) {
+      $item['file'] = 'templates/theme.inc';
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function sl7_social_group_block_info() {
+  $blocks['block_groups'] = array(
+    'info' => 'Социальные группы',
+    'status' => 1,
+    'region' => 'sidebar_first',
+    'weight' => 10,
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function sl7_social_group_block_view($delta = '') {
+  $block = array();
+
+  if ($delta == 'block_groups') {
+    $block['content'] = array(
+      '#markup' => theme('sl7_social_group__block_groups'),
+    );
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ */
+function sl7_social_group_contextual_links_view_alter(&$element, &$items) {
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "block_groups") {
+    if (user_access('administer sl7_social_group')) {
+      $element['#links']['social-networks'] = array(
+        'title' => 'Настроить группы',
+        'href' => url(SL7_SOCIAL_PANEL_ADMIN_PATH, array('absolute' => TRUE)),
+      );
+    }
+  }
+}
+
+function sl7_social_group_ajax_callback($group) {
+  $conf = variable_get('sl7_social_group');
+  $data = $conf[$group];
+  $name = $group;
+
+  $result = array('#type' => 'ajax');
+  $result['#commands'][] = array(
+    'command' => 'socialGroup',
+    'data' => $data,
+    'name' => $name,
+  );
+
+  return $result;
+}
+
+function sl7_social_group_settings_form($form, &$form_state) {
+  $conf = variable_get('sl7_social_group');
+
+  $form['def_tab'] = array(
+    '#type' => 'radios',
+    '#title' => 'Вкладка по умолчанию',
+    '#default_value' => isset($conf['def_tab']) ? $conf['def_tab'] : 'vk',
+    '#options' => array(
+      'vk' => 'Вконтакте',
+      'fb' => 'Facebook',
+      'tw' => 'Twitter',
+      'ok' => 'Одноклассники'
+    ),
+    '#description' => 'Блок с отмеченной группой будет открыт сразу после загрузки сайта.',
+  );
+
+  $form['vk'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Вконтакте',
+    '#default_value' => isset($conf['vk']) ? $conf['vk'] : '',
+  );
+
+  $form['fb'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Facebook',
+    '#default_value' => isset($conf['fb']) ? $conf['fb'] : '',
+  );
+
+  $form['tw'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Twitter',
+    '#default_value' => isset($conf['tw']) ? $conf['tw'] : '',
+  );
+
+  $form['ok'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Одноклассники',
+    '#default_value' => isset($conf['ok']) ? $conf['ok'] : '',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Сохранить',
+    '#weight' => 999,
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback
+ */
+function sl7_social_group_settings_form_submit($form, &$form_state) {
+  form_state_values_clean($form_state);
+  $conf = array();
+
+  foreach ($form_state['values'] as $key => $value) {
+    if (!empty($value)) {
+      if (is_array($value) && isset($form_state['values']['array_filter'])) {
+        $value = array_keys(array_filter($value));
+      }
+      $conf[$key] = $value;
+    }
+  }
+
+  variable_set('sl7_social_group', $conf);
+  drupal_set_message(t('The configuration options have been saved.'));
+}

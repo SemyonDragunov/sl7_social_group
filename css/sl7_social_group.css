@@ -1,0 +1,129 @@
+/* General content */
+
+.sl7-social-group section > div {
+    display: none;
+}
+.sl7-social-group section > div.active {
+    display: block;
+}
+
+/* Tabs */
+
+.sl7-social-group > .wrapper {
+    spanst-style: none outside none;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.sl7-social-group > .wrapper:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+.sl7-social-group > .wrapper > span {
+    float: left;
+}
+.sl7-social-group > .wrapper > span .ajax-progress {
+    display: none;
+}
+.sl7-social-group > .wrapper > span > a {
+    display: block;
+    position: relative;
+    height: 34px;
+    color: white;
+}
+.sl7-social-group > .wrapper > span > a:after {
+    position: absolute;
+    content: "";
+    margin: 0 auto;
+    top: 7px;
+    left: 0;
+    right: 0;
+}
+
+/* VK */
+
+.sl7-social-group > .wrapper > span#vk {
+    background-color: #5B7FA6;
+}
+.sl7-social-group > .wrapper > span#vk > a:after {
+    width: 20px;
+    height: 20px;
+    background: url('../img/sl7_social_group.png') no-repeat 0 0;
+}
+.sl7-social-group > section > div#vk > #vk_groups,
+.sl7-social-group > section > div#vk > #vk_groups > iframe {
+    width: 100% !important;
+}
+
+/* Facebook */
+
+.sl7-social-group > .wrapper > span#fb {
+    background-color: #3A5795;
+}
+.sl7-social-group > .wrapper > span#fb > a:after {
+    width: 11px;
+    height: 20px;
+    background: url('../img/sl7_social_group.png') no-repeat -67px 0;
+}
+
+/* Twitter */
+
+.sl7-social-group > .wrapper > span#tw {
+    background-color: #55ACEE;
+}
+.sl7-social-group > .wrapper > span#tw > a:after {
+    width: 24px;
+    height: 20px;
+    background: url('../img/sl7_social_group.png') no-repeat -43px 0;
+}
+.sl7-social-group > section > div#tw > iframe {
+    height: 400px;
+}
+
+/* Google+ */
+
+.sl7-social-group > .wrapper > span#gl {
+    background-color: #dd4b39;
+}
+.sl7-social-group > .wrapper > span#gl > a:after {
+    width: 23px;
+    height: 20px;
+    background: url('../img/sl7_social_group.png') no-repeat -20px 0;
+}
+.sl7-social-group > section > div#gl {
+    
+}
+
+/* Odnoklassniki */
+
+.sl7-social-group > .wrapper > span#ok {
+    background-color: #EB722E;
+}
+.sl7-social-group > .wrapper > span#ok > a:after {
+    width: 12px;
+    height: 20px;
+    background: url('../img/sl7_social_group.png') no-repeat -78px 0;
+}
+.sl7-social-group > section > div#ok > #ok_group_widget > iframe {
+    margin: -1px;
+    margin-left: 1px;
+    width: 100% !important;
+}
+
+/* Columns */
+
+.sl7-social-group > .wrapper .sg-col-1 {
+    width: 100%;
+}
+.sl7-social-group > .wrapper .sg-col-2 {
+    width: 50%;
+}
+.sl7-social-group > .wrapper .sg-col-3 {
+    width: 33.3333%;
+}
+.sl7-social-group > .wrapper .sg-col-4 {
+    width: 25%;
+}
+.sl7-social-group > .wrapper .sg-col-5 {
+    width: 20%;
+}

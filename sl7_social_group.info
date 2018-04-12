@@ -1,0 +1,10 @@
+name = Социальные группы
+description = Блок с виджетами групп и сообществ в социальных сетях.
+package = SL7
+version = 7.x-1.0
+core = 7.x
+
+configure = admin/control-panel/social/group
+
+dependencies[] = sl7_control_panel
+dependencies[] = contextual
